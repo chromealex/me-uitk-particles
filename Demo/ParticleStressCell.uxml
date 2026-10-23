@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns="ME.UITK.Particles">
+    <ui:VisualElement class="stress-cell">
+        <meparticles name="particles" class="stress-particles" auto-play="false"
+            gpu-bounds-center="0,0,0" gpu-bounds-size="15,9,2" completion-time-greater-than="30" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,23 @@
+{
+    "name": "ME.UITK.Particles.Editor",
+    "rootNamespace": "ME.UITK.Particles.Editor",
+    "references": [
+        "ME.UITK.Particles",
+        "Unity.InputSystem",
+        "UnityEngine.UI",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "ME.UITK.Particles.Demo"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

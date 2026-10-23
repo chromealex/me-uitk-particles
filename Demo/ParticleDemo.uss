@@ -1,0 +1,156 @@
+.overlay-root { flex-grow: 1; align-items: center; justify-content: center; padding: 64px 24px 16px 24px; }
+.world-root { width: 650px; height: 680px; }
+.panel { flex-shrink: 1; min-height: 0; width: 100%; max-height: 100%; padding: 24px; background-color: rgb(17, 24, 39); border-radius: 18px; border-width: 1px; border-color: rgb(56, 77, 100); color: rgb(235, 243, 252); }
+#eyebrow { font-size: 12px; color: rgb(67, 217, 184); -unity-font-style: bold; letter-spacing: 2px; margin-bottom: 10px; }
+#title { font-size: 30px; -unity-font-style: bold; margin-bottom: 6px; }
+#subtitle { font-size: 13px; color: rgb(151, 168, 190); margin-bottom: 18px; }
+.row { flex-shrink: 0; flex-wrap: wrap; flex-direction: row; align-items: center; margin-bottom: 12px; }
+Button { padding: 9px 12px; margin: 0 6px 0 0; background-color: rgb(36, 49, 68); border-width: 1px; border-color: rgb(62, 80, 102); border-radius: 7px; color: rgb(222, 234, 249); font-size: 12px; }
+Button:hover { background-color: rgb(54, 75, 97); border-color: rgb(83, 219, 187); }
+Button:active { background-color: rgb(25, 113, 102); }
+Button.selected { border-color: rgb(67, 217, 184); color: rgb(98, 242, 211); }
+Button.primary { background-color: rgb(54, 204, 174); color: rgb(9, 34, 37); -unity-font-style: bold; }
+.cards { flex-direction: row; flex-shrink: 0; width: 100%; min-width: 600px; }
+.card { min-width: 0; flex-grow: 1; flex-basis: 0; margin-right: 8px; padding: 10px; background-color: rgb(11, 17, 29); border-radius: 10px; }
+#card-title { font-size: 10px; color: rgb(146, 167, 191); margin-bottom: 6px; }
+.viewport { height: 160px; flex-shrink: 0; overflow: hidden; background-color: rgb(19, 29, 45); border-radius: 7px; align-items: center; justify-content: center; }
+.crosshair { font-size: 28px; color: rgba(120, 155, 183, 0.25); }
+.status { height: 64px; font-size: 10px; color: rgb(134, 159, 185); white-space: normal; margin-top: 7px; }
+#footer { color: rgb(128, 150, 176); font-size: 11px; white-space: normal; }
+Toggle { color: rgb(183, 201, 220); margin-left: 8px; }
+
+Toggle > .unity-base-field__label { min-width: 0; margin-right: 8px; }
+
+.scenario-hint { color: rgb(168, 189, 210); font-size: 11px; white-space: normal; height: 30px; margin-bottom: 5px; }
+.occluder { width: 150px; height: 58px; flex-shrink: 0; margin: 0; background-color: rgb(58, 80, 112); border-width: 2px; border-color: rgb(117, 147, 184); -unity-font-style: bold; }
+.occluder:hover { background-color: rgb(72, 101, 139); }
+
+#view-tabs { position: absolute; top: 18px; left: 0; right: 0; flex-direction: row; justify-content: center; }
+#view-tabs Button { min-width: 90px; font-size: 16px; -unity-font-style: bold; }
+
+/* Settings and effect cards scroll independently. */
+.panel > Label { flex-shrink: 0; white-space: normal; }
+#effects-scroll { flex-grow: 1; flex-basis: 0; flex-shrink: 1; min-width: 0; min-height: 0; }
+#stress-sidebar .unity-scroller--vertical,
+#demo-sidebar .unity-scroller--vertical,
+#effects-scroll .unity-scroller--vertical { width: 12px; margin-left: 6px; }
+#stress-sidebar .unity-scroller--horizontal,
+#demo-sidebar .unity-scroller--horizontal,
+#effects-scroll .unity-scroller--horizontal { height: 12px; margin-top: 6px; }
+#stress-sidebar .unity-scroller__low-button,
+#demo-sidebar .unity-scroller__low-button,
+#effects-scroll .unity-scroller__low-button,
+#stress-sidebar .unity-scroller__high-button,
+#demo-sidebar .unity-scroller__high-button,
+#effects-scroll .unity-scroller__high-button { display: none; }
+#stress-sidebar .unity-base-slider__tracker,
+#demo-sidebar .unity-base-slider__tracker,
+#effects-scroll .unity-base-slider__tracker { background-color: rgb(11, 17, 29); border-radius: 6px; border-width: 0; }
+#stress-sidebar .unity-base-slider__dragger,
+#demo-sidebar .unity-base-slider__dragger,
+#effects-scroll .unity-base-slider__dragger { background-color: rgb(56, 77, 100); border-color: rgb(62, 80, 102); border-width: 1px; border-radius: 6px; }
+#stress-sidebar .unity-base-slider__dragger:hover,
+#demo-sidebar .unity-base-slider__dragger:hover,
+#effects-scroll .unity-base-slider__dragger:hover { background-color: rgb(83, 159, 148); border-color: rgb(67, 217, 184); }
+#stress-sidebar .unity-base-slider__dragger:active,
+#demo-sidebar .unity-base-slider__dragger:active,
+#effects-scroll .unity-base-slider__dragger:active { background-color: rgb(54, 204, 174); border-color: rgb(67, 217, 184); }
+#stress-sidebar .unity-base-slider__dragger-border,
+#demo-sidebar .unity-base-slider__dragger-border,
+#effects-scroll .unity-base-slider__dragger-border { border-width: 0; }
+
+/* Stress lab shares the playground palette and controls. */
+.stress-root { flex-grow: 1; padding: 24px; background-color: rgb(6, 9, 15); }
+.stress-panel { flex-grow: 1; flex-direction: row; padding: 16px; }
+#stress-sidebar { width: 310px; flex-shrink: 0; margin-right: 16px; }
+#stress-sidebar .unity-scroll-view__content-container { padding-right: 8px; }
+#stress-sidebar Label { white-space: normal; flex-shrink: 0; }
+#stress-sidebar .row { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
+#stress-sidebar DropdownField { flex-basis: auto; flex-grow: 0; margin-right: 0; margin-bottom: 12px; }
+#stress-sidebar Button { margin-right: 0; margin-bottom: 6px; }
+#stress-sidebar Toggle { margin-bottom: 10px; }
+.stress-root #stress-controls { flex-shrink: 0; }
+.stress-root .row { margin-bottom: 10px; }
+.stress-root .row > Button { margin-bottom: 4px; }
+.stress-root DropdownField { flex-grow: 1; flex-basis: 0; min-width: 200px; margin: 0 12px 4px 0; flex-direction: column; align-items: stretch; }
+.stress-root DropdownField > .unity-base-field__label { color: rgb(146, 167, 191); font-size: 11px; margin: 0 0 6px 0; min-width: 0; }
+.stress-root DropdownField > .unity-base-field__input { min-height: 34px; padding: 6px 10px; background-color: rgb(11, 17, 29); border-width: 1px; border-color: rgb(62, 80, 102); border-radius: 7px; color: rgb(222, 234, 249); }
+.stress-root DropdownField > .unity-base-field__input:hover,
+.stress-root DropdownField:focus > .unity-base-field__input { border-color: rgb(67, 217, 184); }
+.stress-root Toggle { margin: 0 20px 4px 0; font-size: 12px; }
+.stress-root Toggle .unity-toggle__input { background-color: rgb(11, 17, 29); border-color: rgb(62, 80, 102); }
+.stress-root Toggle:checked .unity-toggle__checkmark { -unity-background-image-tint-color: rgb(67, 217, 184); }
+.stress-root Button:disabled,
+.stress-root Toggle:disabled { opacity: 0.45; }
+.stress-preview { flex-grow: 1; flex-basis: 0; flex-shrink: 1; min-width: 0; min-height: 0; padding: 12px; background-color: rgb(11, 17, 29); border-radius: 10px; margin-top: 0; margin-bottom: 0; }
+.stress-caption { flex-shrink: 0; color: rgb(146, 167, 191); font-size: 10px; -unity-font-style: bold; letter-spacing: 1px; margin-bottom: 6px; }
+.stress-status { flex-shrink: 0; color: rgb(98, 242, 211); font-size: 13px; white-space: normal; margin-bottom: 10px; }
+#stress-stage { flex-grow: 1; min-height: 0; flex-direction: row; flex-wrap: wrap; overflow: hidden; background-color: rgb(19, 29, 45); border-radius: 7px; }
+.stress-cell { border-width: 1px; border-color: rgba(56, 77, 100, 0.35); }
+.stress-measurement { flex-shrink: 0; padding: 12px; margin-bottom: 10px; background-color: rgb(11, 17, 29); border-radius: 10px; }
+.stress-result { color: rgb(222, 234, 249); font-size: 12px; white-space: normal; min-height: 32px; }
+#stress-sidebar .unity-scroller--vertical { width: 10px; margin-left: 6px; }
+#stress-sidebar .unity-scroller__low-button, #stress-sidebar .unity-scroller__high-button { display: none; }
+#stress-sidebar .unity-base-slider__tracker { background-color: rgb(11, 17, 29); border-radius: 6px; border-width: 0; }
+#stress-sidebar .unity-base-slider__dragger { background-color: rgb(56, 77, 100); border-color: rgb(62, 80, 102); border-width: 1px; border-radius: 6px; }
+#stress-sidebar .unity-base-slider__dragger-border { border-width: 0; }
+
+
+/* UXML particle templates and declarative scenario states. */
+.hidden, .world-root #view-tabs { display: none; }
+#effects-scroll .unity-scroll-view__content-container { min-width: 100%; }
+.card-particles, .stress-particles { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+.world-root .card-particles { --meparticles-pixels-per-unit: 47; }
+.world-root .vfxgraph-card .card-particles { --meparticles-pixels-per-unit: 28; }
+.click-particles { position: absolute; width: 160px; height: 160px; overflow: visible; }
+.stress-cell { overflow: hidden; }
+.occluder { display: none; }
+.unclipped .viewport { overflow: visible; }
+.unclipped .crosshair { display: none; }
+.unclipped .occluder { display: flex; }
+
+/* Standard UITK transitions animate the whole particle visual, on every backend. */
+.card-particles {
+    opacity: 1;
+    scale: 1 1;
+    rotate: 0deg;
+    transition-property: opacity, scale, rotate;
+    transition-duration: 450ms;
+    transition-timing-function: ease-in-out;
+    --meparticles-transition-duration: 450ms;
+    --meparticles-transition-timing-function: ease-in-out;
+}
+.card:hover .card-particles { scale: 1.08 1.08; }
+.animated .card-particles {
+    opacity: 0.65;
+    rotate: 12deg;
+    --meparticles-pixels-per-unit: 72;
+}
+.animated .vfxgraph-card .card-particles { --meparticles-pixels-per-unit: 38; }
+.world-root .animated .card-particles { --meparticles-pixels-per-unit: 66; }
+.world-root .animated .vfxgraph-card .card-particles { --meparticles-pixels-per-unit: 38; }
+
+/* Playground: settings on the left, wrapping effect cards on the right. */
+.demo-panel { flex-grow: 1; flex-direction: row; padding: 16px; }
+#demo-sidebar { width: 310px; flex-shrink: 0; margin-right: 16px; }
+#demo-sidebar .unity-scroll-view__content-container { padding-right: 8px; }
+#demo-sidebar Label { white-space: normal; flex-shrink: 0; }
+#demo-sidebar .row { flex-direction: column; align-items: stretch; flex-wrap: nowrap; }
+#demo-sidebar Button { margin-right: 0; margin-bottom: 6px; }
+#demo-sidebar Toggle { margin: 4px 0 8px 0; }
+#demo-sidebar .scenario-hint { height: auto; margin-bottom: 16px; }
+.demo-panel .cards { flex-wrap: wrap; min-width: 0; }
+.demo-panel .card { flex-basis: 240px; min-width: 220px; margin: 0 8px 12px 0; }
+.world-root #demo-sidebar { width: 220px; }
+.world-root .demo-panel { height: 100%; }
+
+/* Reveal settings are read when Cloud / Assemble / Play starts. */
+.reveal-target {
+    --meparticles-reveal-mode: cloud;
+    --meparticles-reveal-direction: show;
+    --meparticles-reveal-duration: 1.6;
+    --meparticles-reveal-count: 140;
+    --meparticles-reveal-columns: 32;
+    --meparticles-reveal-spread: 90;
+    --meparticles-reveal-color: rgb(100, 245, 210);
+}

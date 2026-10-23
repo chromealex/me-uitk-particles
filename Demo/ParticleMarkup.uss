@@ -1,0 +1,43 @@
+.markup-example {
+    width: 300px;
+    height: 220px;
+    overflow: hidden;
+}
+
+.markup-example.compact {
+    --meparticles-render-on-top: true;
+    --meparticles-tint: #ff8040;
+    --meparticles-visual-scale: 1.6;
+    --meparticles-system-scale-x: 2;
+    --meparticles-position-x: 8;
+    --meparticles-simulation-speed: 0.75;
+    --meparticles-attractor-target: "compact-emission-button";
+    --meparticles-attractor-strength: 30;
+    --meparticles-attractor-radius: 2;
+    --meparticles-attractor-kill-on-arrival: false;
+    --meparticles-attractor-system-index: 0;
+    --meparticles-emission-rate: 24;
+    --meparticles-emission-area: "compact-emission-button";
+    --meparticles-pixels-per-unit: 42;
+    --meparticles-use-jobs: true;
+    --meparticles-job-vertex-threshold: 2048;
+    --meparticles-gpu-bounds-size-x: 20;
+    --meparticles-completion-time-greater-than: 45;
+    --meparticles-completion-match: Any;
+    --meparticles-completion-clock: Unscaled;
+}
+
+/* Used by Run Markup Checks to exercise delayed and interrupted transitions. */
+.markup-example.transition-test {
+    --meparticles-transition-duration: 1s;
+    --meparticles-transition-delay: 100ms;
+}
+.markup-example.transition-test.expanded {
+    --meparticles-tint: white;
+    --meparticles-visual-scale: 2.4;
+    --meparticles-system-scale-y: 4;
+    --meparticles-position-x: 30;
+    --meparticles-simulation-speed: 2.5;
+    --meparticles-pixels-per-unit: 140;
+    --meparticles-gpu-bounds-size-x: 24;
+}

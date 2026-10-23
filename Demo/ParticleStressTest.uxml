@@ -1,0 +1,39 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="ParticleDemo.uss" />
+    <ui:VisualElement class="panel stress-panel">
+        <ui:ScrollView name="stress-sidebar" mode="Vertical" horizontal-scroller-visibility="Hidden">
+            <ui:Label name="eyebrow" text="03 / PERFORMANCE" />
+            <ui:Label name="title" text="Particle stress lab" />
+            <ui:Label name="subtitle" text="1,000 to 50,000 particles. Compare renderers, mesh jobs and transparent overdraw." />
+            <ui:VisualElement name="stress-controls">
+                <ui:VisualElement class="row">
+                    <ui:DropdownField name="particle-count" label="Total particles" />
+                    <ui:DropdownField name="instance-count" label="UI elements" />
+                    <ui:DropdownField name="render-mode" label="Renderer" />
+                </ui:VisualElement>
+                <ui:VisualElement class="row">
+                    <ui:Toggle name="overdraw" label="Large particles / overdraw" />
+                    <ui:Toggle name="jobs" label="Mesh jobs" value="true" />
+                    <ui:Toggle name="live-counters" label="Live counters" value="true" />
+                </ui:VisualElement>
+                <ui:VisualElement class="row">
+                    <ui:Button name="apply" class="primary" text="Apply / restart" />
+                    <ui:Button name="stop" text="Stop / clear" />
+                    <ui:Button name="measure" text="Measure 10 seconds" />
+                    <ui:Button name="atlas-four" text="Atlas: 4 elements" />
+                    <ui:Button name="atlas-sixteen" text="Atlas: 16 elements" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="stress-measurement">
+                <ui:Label class="stress-caption" text="MEASUREMENT" />
+                <ui:Label name="measurement-result" class="stress-result" text="Ready. Select a workload and measure 10 seconds of playback." />
+            </ui:VisualElement>
+            <ui:Label name="footer" text="2-second warm-up, then 10-second sample. HUD freezes during measurement. GC covers the entire frame. VFXGraph uses a separate VFX Graph workload." />
+        </ui:ScrollView>
+        <ui:VisualElement class="stress-preview">
+            <ui:Label class="stress-caption" text="LIVE WORKLOAD" />
+            <ui:Label name="stress-status" class="stress-status" text="Waiting for layout..." />
+            <ui:VisualElement name="stress-stage" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

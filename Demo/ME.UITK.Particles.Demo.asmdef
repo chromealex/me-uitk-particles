@@ -1,0 +1,16 @@
+{
+    "name": "ME.UITK.Particles.Demo",
+    "rootNamespace": "ME.UITK.Particles.Demo",
+    "references": [
+        "ME.UITK.Particles"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
