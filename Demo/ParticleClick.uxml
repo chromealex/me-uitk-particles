@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns="ME.UITK.Particles">
+    <meparticles name="click-particles" class="click-particles" pixels-per-unit="24" auto-play="true" prefab="project://database/Assets/ME.UITK.Particles/Demo/ClickBurst.prefab" />
+</ui:UXML>

@@ -1,0 +1,102 @@
+#pragma kernel Step
+#include "ParticleMotion.hlsl"
+#include "ParticleNoise.hlsl"
+struct ParticleState {
+    float4 positionLife;
+    float4 velocityLifetime;
+    float4 sizeRotationSeed;
+};
+RWStructuredBuffer<ParticleState> _Particles;
+RWStructuredBuffer<uint> _Alive;
+RWTexture2D<float4> _StateTexture;
+Texture2D<float4> _Appearance;
+SamplerState sampler_Appearance;
+int _Count, _PlaneCount, _TriggerCount, _ForceCount;
+float _Delta, _NoiseTime;
+float4 _Gravity, _Limit, _LimitSettings, _Collision, _KillSpeed, _TriggerActions, _RotationSpeed;
+float4 _Planes[8], _Spheres[8], _FieldPositions[8], _FieldForces[8];
+float Rate(float speed, float random) {
+    float t = saturate((speed - _RotationSpeed.x) / max(.000001, _RotationSpeed.y - _RotationSpeed.x));
+    float2 rates = _Appearance.SampleLevel(sampler_Appearance, float2((t * 255 + .5) / 256, 5.5 / 8), 0).rg;
+    return _RotationSpeed.z > .5 ? lerp(rates.x, rates.y, random) : 0;
+}
+bool Inside(float3 position, float radius) {
+    for (int i = 0; i < _TriggerCount; i++) {
+        if (distance(position, _Spheres[i].xyz) <= _Spheres[i].w + radius) return true;
+    }
+    return false;
+}
+[numthreads(64, 1, 1)]
+void Step(uint index : SV_DispatchThreadID) {
+    if (index >= (uint)_Count) return;
+    ParticleState p = _Particles[index];
+    float duration = min(_Delta, max(0, p.positionLife.w));
+    // Accumulated float clocks can place a 1/60 step a few ULPs above 1.
+    // Avoid an extra substep that changes semi-implicit position integration.
+    int steps = max(1, min(256, (int)ceil(duration * 60 - .0001)));
+    float dt = duration / steps;
+    float radius = abs(p.sizeRotationSeed.x) * .5;
+    bool wasInside = Inside(p.positionLife.xyz, radius * _KillSpeed.z);
+    if ((_TriggerActions.x > .5 && wasInside) || (_TriggerActions.y > .5 && !wasInside)) p.positionLife.w = 0;
+    for (int step = 0; step < steps && p.positionLife.w > 0 && dt > 0; step++) {
+        float age = 1 - p.positionLife.w / max(.000001, p.velocityLifetime.w);
+        float3 d0, v0, d1, v1;
+        float r0, w0, r1, w1;
+        EvaluateMotion(age, p.velocityLifetime.w, p.sizeRotationSeed.w, d0, v0, r0, w0);
+        EvaluateMotion(age + dt / p.velocityLifetime.w, p.velocityLifetime.w, p.sizeRotationSeed.w, d1, v1, r1, w1);
+        float3 oldVelocity = p.velocityLifetime.xyz;
+        float oldRotationRate = Rate(length(oldVelocity), p.sizeRotationSeed.w);
+        float3 acceleration = _Gravity.xyz;
+        for (int f = 0; f < _ForceCount; f++) {
+            float distanceToField = distance(p.positionLife.xyz, _FieldPositions[f].xyz);
+            if (distanceToField <= _FieldPositions[f].w && distanceToField >= _FieldForces[f].w) acceleration += _FieldForces[f].xyz;
+        }
+        float3 velocity = oldVelocity + acceleration * dt + v1 - v0;
+        if (_LimitSettings.x > .5) {
+            float drag = _LimitSettings.z;
+            if (_LimitSettings.w > .5) drag *= radius * 2;
+            if (_Limit.w > .5) drag *= length(velocity);
+            velocity *= exp(-max(0, drag) * dt);
+            float3 limited = _LimitSettings.y > .5 ? clamp(velocity, -_Limit.xyz, _Limit.xyz)
+                : velocity * min(1, _Limit.x / max(.000001, length(velocity)));
+            velocity = lerp(velocity, limited, 1 - pow(1 - saturate(_KillSpeed.w), dt * 30));
+        }
+        // Unity applies the limited velocity before advancing the particle.
+        float3 position = p.positionLife.xyz + (_LimitSettings.x > .5 ? velocity : (oldVelocity + velocity) * .5) * dt;
+        float fieldTime = _NoiseTime + step * dt;
+        float3 noise0 = SpatialNoiseVelocity(p.positionLife.xyz, fieldTime, age, p.sizeRotationSeed.w);
+        float3 midpoint = (p.positionLife.xyz + position) * .5 + noise0 * (.5 * dt);
+        position += SpatialNoiseVelocity(midpoint, fieldTime + .5 * dt, age + .5 * dt / p.velocityLifetime.w, p.sizeRotationSeed.w) * dt;
+        for (int plane = 0; plane < _PlaneCount; plane++) {
+            float distanceToPlane = dot(position, _Planes[plane].xyz) - _Planes[plane].w - radius * _Collision.w;
+            float normalSpeed = dot(velocity, _Planes[plane].xyz);
+            if (distanceToPlane < 0) {
+                position -= _Planes[plane].xyz * distanceToPlane;
+                if (normalSpeed < 0) {
+                    velocity = (velocity - (1 + _Collision.x) * normalSpeed * _Planes[plane].xyz) * (1 - _Collision.y);
+                    p.positionLife.w -= p.velocityLifetime.w * _Collision.z;
+                    float speed = length(velocity);
+                    if (speed < _KillSpeed.x || speed > _KillSpeed.y) p.positionLife.w = 0;
+                }
+            }
+        }
+        bool inside = Inside(position, radius * _KillSpeed.z);
+        if ((_TriggerActions.x > .5 && inside) || (_TriggerActions.y > .5 && !inside)
+            || (_TriggerActions.z > .5 && inside && !wasInside) || (_TriggerActions.w > .5 && !inside && wasInside)) p.positionLife.w = 0;
+        wasInside = inside;
+        float rotationDelta = w1 - w0 + Rate(length(velocity), p.sizeRotationSeed.w) - oldRotationRate;
+        p.sizeRotationSeed.y += (p.sizeRotationSeed.z + rotationDelta * .5) * dt;
+        p.sizeRotationSeed.z += rotationDelta;
+        p.positionLife.xyz = position;
+        p.velocityLifetime.xyz = velocity;
+        p.positionLife.w -= dt;
+    }
+    // A large step may exceed remaining lifetime. Preserve an expired sentinel.
+    if (_Delta > duration && p.positionLife.w > 0) p.positionLife.w = 0;
+    _Particles[index] = p;
+    uint2 pixel = uint2(index % 512, (index / 512) * 3);
+    _StateTexture[pixel] = p.positionLife;
+    _StateTexture[pixel + uint2(0, 1)] = p.velocityLifetime;
+    _StateTexture[pixel + uint2(0, 2)] = p.sizeRotationSeed;
+    if (p.positionLife.w > 0) InterlockedAdd(_Alive[0], 1);
+}

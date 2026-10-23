@@ -1,0 +1,98 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns="ME.UITK.Particles">
+    <ui:Style src="ParticleDemo.uss" />
+    <ui:VisualElement name="view-tabs">
+        <ui:Button name="tab-2d" class="selected" text="2D" />
+        <ui:Button name="tab-3d" text="3D" />
+    </ui:VisualElement>
+    <ui:VisualElement name="demo-panel" class="panel demo-panel">
+        <ui:ScrollView name="demo-sidebar" mode="Vertical" horizontal-scroller-visibility="Hidden">
+            <ui:Label name="eyebrow" text="01 / SCREEN OVERLAY" />
+            <ui:Label name="title" text="Particle playground" />
+            <ui:Label name="subtitle" text="GPU, Mesh, RenderTexture, Atlas and VFXGraph particles in UI." />
+            <ui:VisualElement name="preset-picker" class="row" />
+            <ui:VisualElement class="row">
+                <ui:Button class="scenario" text="Clipping" />
+                <ui:Button class="scenario" text="Behind UI" />
+                <ui:Button class="scenario" text="Above UI" />
+            </ui:VisualElement>
+            <ui:Label class="scenario-hint" />
+            <ui:VisualElement class="row">
+                <ui:Button name="emit-all" class="primary" text="Emit particles" />
+                <ui:Button name="clear" text="Clear" />
+                <ui:Toggle name="repeat" label="Repeat" />
+                <ui:Toggle name="animate" label="Animate USS" />
+            </ui:VisualElement>
+            <ui:Label name="footer" text="Toggle Animate USS or hover a card to animate the effect. VFXGraph plays its own VFX Graph." />
+        </ui:ScrollView>
+        <ui:ScrollView name="effects-scroll" mode="Vertical" horizontal-scroller-visibility="Hidden">
+            <ui:VisualElement class="cards">
+            <ui:VisualElement class="card ">
+                <ui:Label name="card-title" text="AUTO" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="Auto"
+                        pixels-per-unit="52" prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Sparks.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            <ui:VisualElement class="card ">
+                <ui:Label name="card-title" text="MESH" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="Mesh"
+                        pixels-per-unit="52" prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Sparks.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            <ui:VisualElement class="card gpu-card">
+                <ui:Label name="card-title" text="GPU / PROCEDURAL" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="GPU"
+                        pixels-per-unit="52" prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Sparks.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            <ui:VisualElement class="card ">
+                <ui:Label name="card-title" text="RENDER TEXTURE / CAMERA" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="RenderTexture"
+                        pixels-per-unit="52" prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Sparks.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            <ui:VisualElement class="card ">
+                <ui:Label name="card-title" text="SHARED TEXTURE ATLAS" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="RenderTexture, RenderTextureAtlas"
+                        pixels-per-unit="52" prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Sparks.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            <ui:VisualElement class="card vfxgraph-card">
+                <ui:Label name="card-title" text="VFXGraph" />
+                <ui:VisualElement class="viewport">
+                    <ui:Label class="crosshair" text="+" picking-mode="Ignore" />
+                    <meparticles name="particles" class="card-particles" auto-play="false" render-mode="VFXGraph"
+                        pixels-per-unit="28" prefab="project://database/Assets/ME.UITK.Particles/Demo/VFXGraph/VFXGraph Burst.prefab" />
+                    <ui:Button class="occluder" name="occluding-button" text="UI button, click me" />
+                </ui:VisualElement>
+                <ui:Label class="status" />
+                <ui:Button name="emit-here" text="Emit here" />
+            </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

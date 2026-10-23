@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns="ME.UITK.Particles">
+    <ui:Style src="ParticleMarkup.uss" />
+    <ui:Button name="emission-button" text="Emission area" style="width: 180px; height: 45px;" />
+    <ui:Button name="compact-emission-button" text="Compact area" style="width: 100px; height: 30px;" />
+    <meparticles name="markup-particles" class="markup-example"
+        prefab="project://database/Assets/ME.UITK.Particles/Demo/Generated/Confetti.prefab"
+        render-mode="Mesh" auto-play="true" pixels-per-unit="70"
+        emission-rate="12" emission-system-index="0" emission-area="emission-button"
+        tint="#80C0FFFF" visual-scale="1.2" system-scale="1,2,1" position="3,4" simulation-speed="1.25"
+        attractor-target="emission-button" attractor-strength="20" attractor-radius="1"
+        attractor-kill-on-arrival="false" attractor-system-index="0"
+        random-seed="42" automatic-simulation="true"
+        use-jobs="false" job-vertex-threshold="8192"
+        gpu-bounds-center="1,2,3" gpu-bounds-size="12,14,16"
+        completion-time-enabled="true" completion-time-greater-than="30"
+        completion-count-enabled="true" completion-count-less-than="2"
+        completion-match="All" completion-clock="Scaled" stop-on-completion="true" />
+</ui:UXML>
