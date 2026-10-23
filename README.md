@@ -737,17 +737,6 @@ The benchmark uses Unity's `GC.Alloc` recorder on the current thread, first veri
 
 Use Unity Profiler in a development build on your target device to assess total frame cost, peak memory, first-use spikes, and your own prefab scripts. Retaining buffer capacity trades memory for fewer allocations. See [performance.md](docs/performance.md) for measurement details.
 
-## Validation & capture
-
-In the playground's Play Mode, run **Tools → Checks → ME.UITK.Particles → Run Smoke Checks**.
-The checks cover both panels and all four presets: live particles, mesh vertices, RT alpha, transparent texture borders, visible pixels beyond the old viewport, UI scale, Auto selection, clearing, and detach/reattach cleanup.
-Results are written to `Logs/ParticleUI-Smoke.txt`. These checks do not replace visual review or world-space input testing.
-
-**Tools → Checks → ME.UITK.Particles → Run Color Checks** compares final screen pixels for Mesh and RT using stationary particles, white/tinted materials, opaque/translucent colors, and both `Apply Active Color Space` settings, including the jobs path. It writes `Logs/ParticleUI-Color.txt`. Keep the Game View visible during the checks.
-The mesh path converts baked colors to the sRGB vertex tint expected by UI Toolkit, while matching the material tint multiplication used by the native shader.
-
-To regenerate the GIFs, use **Tools → Development → ME.UITK.Particles → Capture README Frames**, then follow [the capture instructions](docs/media/README.md). All previews are recorded from the actual Unity demo.
-
 ---
 
 Author: [Alex Silaev](https://chromealex.com)
