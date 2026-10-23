@@ -105,8 +105,6 @@ USS имеет приоритет над UXML; удаление правила �
 декларативную конфигурацию.
 
 Готовые файлы: [ParticleMarkup.uxml](Demo/ParticleMarkup.uxml), [ParticleMarkup.uss](Demo/ParticleMarkup.uss).
-Проверка импорта, автозапуска, атрибутов, смены классов и Dispose:
-**Tools > Checks > ME.UITK.Particles > Run Markup Checks**, отчёт `Logs/ParticleUI-Markup.txt`.
 
 ### Анимации USS
 
@@ -161,9 +159,6 @@ USS имеет приоритет над UXML; удаление правила �
 Если нужно менять UXML-настройки и сразу вызывать Play в том же кадре, вызовите
 `ApplyUxmlSettings()` после изменения `uxml*` свойств. Обычный отложенный путь остаётся
 предпочтительным для разметки и смены USS-классов.
-**Run Markup Checks** проверяет также delay, интерполяцию bounds, разворот и Dispose.
-**Run Demo Markup Checks** запускается из Edit Mode и проверяет обе сцены в Play Mode,
-записывая `Logs/ParticleUI-DemoMarkup.txt`; после проверки возвращает редактор в Edit Mode.
 
 
 ## Возможности
@@ -291,8 +286,6 @@ void OnParticlesCompleted(ParticleCompletedEvent evt) {
 - По умолчанию `stopOnCompletion = false`: уведомление не прерывает отрисовку и эмиссию. Значение `true` останавливает и очищает эффект перед отправкой события.
 - Ручной `Stop()`, `SetPrefab()`, detach и `Dispose()` отменяют ожидающее уведомление. Повторный attach играющего элемента запускает новое проигрывание. Подписки сохраняются до `UnregisterCallback<ParticleCompletedEvent>()`. Событие из пула поддерживает trickle-down и bubbling: `evt.target` — элемент частиц, `evt.currentTarget` — текущий слушатель. Экземпляр события нельзя хранить после обработчика. Первое расширение пула может выделять память.
 
-В Play Mode демо запустите **Tools → Checks → ME.UITK.Particles → Run Completion Checks** для проверки границ порогов, Any/All, дочерних систем, перезапуска, отмены и доставки события планировщиком.
-
 ## Частицы позади и поверх UI
 
 ![Частицы позади кнопки, затем поверх её фона и текста](docs/media/layering.gif)
@@ -352,7 +345,7 @@ particles.SetPrefab(prefab, ParticleRenderMode.RenderTexture | ParticleRenderMod
 
 `RenderTextureAtlas` — дополнительный режим: до четырёх совместимых эффектов разделяют одну камеру, две текстуры и один проход преобразования альфы. `Auto` сохраняет приоритет GPU, сравнивает Mesh/RT для совместимых с Mesh эффектов и объединяет подходящих кандидатов RenderTexture, включая RT, выбранный по результатам замера, при наличии четырёх играющих эффектов с одинаковыми размерами и разрешением плитки. Группа сохраняется до двух эффектов; один оставшийся активный эффект возвращается на RT без перезапуска симуляции.
 
-В демо есть отдельная карточка **SHARED TEXTURE ATLAS** рядом с RT. В стресс-тесте доступны **RenderTextureAtlas** и быстрые нагрузки на 4 или 16 элементов с 10 000 частиц суммарно. Фактический путь показывает `activeMode`. **Run Atlas Checks** проверяет пиксели итогового UI, изоляцию и ориентацию плиток, переходы Auto, остановку, detach/attach и fallback при слишком большой плитке.
+В демо есть отдельная карточка **SHARED TEXTURE ATLAS** рядом с RT. В стресс-тесте доступны **RenderTextureAtlas** и быстрые нагрузки на 4 или 16 элементов с 10 000 частиц суммарно. Фактический путь показывает `activeMode`.
 
 Atlas поддерживает один локальный ParticleSystem на prefab: billboard-частицы с ориентацией View, материалом `ParticleUI/Alpha` и отключённой сортировкой. Мировые trails, гравитация, внешние взаимодействия и shape renderers, дополнительные компоненты и непроверенные шейдеры используют RT. Границы оцениваются заранее и проверяются перед рендером; растущие эффекты перегруппировываются. Плитки больше 1024 пикселей по любой оси или 128 мировых единиц переходят на RT, только если RT разрешён маской; иначе отрисовка приостанавливается. Страницам атласа нужна поддержка текстур 2048. Остановленные элементы сохраняют плитки, но не рисуются; пустые страницы освобождаются при Dispose.
 
@@ -363,7 +356,7 @@ particles.SetPrefab(effectPrefab, ParticleRenderMode.RenderTextureAtlas);
 particles.Play();
 ```
 
-Auto сначала проверяет GPU, затем сравнивает **Mesh / RenderTexture** для совместимых с Mesh эффектов; для несовместимых использует **RenderTexture / RenderTextureAtlas**. Если RT победил в замере, эффект тоже может войти в Atlas; при близком времени кадра предпочтение остаётся у Mesh. Для VFX Graph требуется явный `ParticleRenderMode.VFXGraph`. Команды **Run Render Mode Checks** и **Run Atlas Checks** проверяют выбор режимов и объединение эффектов.
+Auto сначала проверяет GPU, затем сравнивает **Mesh / RenderTexture** для совместимых с Mesh эффектов; для несовместимых использует **RenderTexture / RenderTextureAtlas**. Если RT победил в замере, эффект тоже может войти в Atlas; при близком времени кадра предпочтение остаётся у Mesh. Для VFX Graph требуется явный `ParticleRenderMode.VFXGraph`.
 
 Есть **пять способов отрисовки: Mesh, RenderTexture (RT), RenderTextureAtlas, GPU и VFXGraph / VFX Graph**. `Auto` выбирает подходящий путь; VFX Graph по-прежнему включается явно.
 
@@ -377,8 +370,6 @@ Auto сначала проверяет GPU, затем сравнивает **Me
 | `VFXGraph` / VFX Graph | Включается вручную для префаба с `VisualEffect` и назначенным VFX Graph. |
 
 **Mesh** использует `ParticleSystemRenderer.BakeMesh` и отрисовку мешей UI Toolkit. Требуются billboard-частицы в локальном пространстве, шейдер `ParticleUI/Alpha` и неизменённые UV scale/offset материала. Шлейфы запекаются отдельно через `BakeTrailsMesh` со своим материалом `ParticleUI/Alpha` (также без UV scale/offset). Texture Sheet Animation в режимах Grid и Sprites использует запечённые UV. Спрайты должны быть Full Rect без tight packing и использовать общую текстуру; она имеет приоритет над текстурой материала. Particle lights и custom vertex data остаются несовместимыми с Mesh.
-
-**Run Texture Sheet Checks** проверяет цвета четырёх кадров Grid/Sprites в итоговом UI для Mesh (с Jobs и без), GPU и RenderTexture. Отчёт: `Logs/ParticleUI-TextureSheet.txt`. Значение `TextureSheetAnimationEnabled` теперь означает некорректный список спрайтов.
 
 **RenderTexture** рендерит нативную систему с её материалами, преобразует alpha для композиции с UI и показывает результат в расширенном дочернем элементе. Пресет Trails также поддерживает прямую отрисовку в карточке Mesh.
 
@@ -425,19 +416,15 @@ Limit Velocity, Collision, Triggers и External Forces используют comp
 
 Счётчики GPU-динамики читаются асинхронно и могут отставать на кадр или больше. GetParticles, SetParticles, Emit и чтение Custom Data при необходимости синхронизируют GPU и могут вызвать задержку; обычная симуляция остаётся на GPU. Аналитический путь считает частицы по lifetime без readback. Свечение выбирает первые maxLights слотов частиц, затем применяет ratio, поэтому видимых источников может быть меньше, чем при нативном распределении Unity.
 
-**Run Extended GPU Checks** в Play Mode проверяет пиксели цвета/размера, кадры атласа, скорость эмиттера, Custom Data, GPU limit/drag, отскок от плоскости, уничтожение триггером, ветер, сохранение движения после чтения/записи и свечение без нативных объектов. Отчёт: `Logs/ParticleUI-GPUExtended.txt`.
-
 Неподдерживаемые настройки модулей, иерархии систем, скрипты, дополнительные рендереры, другие материалы и неподдерживаемое устройство вызывают fallback Auto на Mesh/RenderTexture. Явный `ParticleRenderMode.GPU` отклоняет несовместимый префаб до замены текущего эффекта. `ParticleElement.GpuCompatibility(prefab)` возвращает `null` при совместимости или причину отказа; в Editor/DEBUG причина также добавляется в `compatibilityInfo`.
 
 Кривые и градиенты аппроксимируются таблицей из 256 отсчётов. Распределение случайных значений сохраняет диапазоны настроек, но не повторяет последовательность RNG Unity. Seeds выбираются при создании backend; Play повторяет те же частицы. Изменения префаба после создания применяются повторным SetPrefab. Это ограниченная GPU-реализация, а не полная совместимость с Shuriken. `bakedVertexCount` равен 0; `particleCount` использует lifetime для аналитического движения и запаздывающий GPU readback для динамики. Естественное завершение и Stop используют обычный API элемента.
-
-**Tools → Checks → ME.UITK.Particles → Run GPU Checks** в Play Mode проверяет Auto, отсутствие созданного ParticleSystem, видимые пиксели, завершение, повторный запуск, Stop, detach/attach и fallback. Отчёт: `Logs/ParticleUI-GPU.txt`. **Run GPU Module Checks** проверяет интегралы движения, диапазоны, SetParticles, Noise и диагностику; отчёт: `Logs/ParticleUI-GPUModules.txt`.
 
 GPU также поддерживает **Trails** в режиме Per Particle: локальное пространство, Stretch UV, ratio, постоянный lifetime, Die With Particles, Size Affects Width, Inherit Particle Color, кривую ширины и градиенты цвета. Нужен trail material с `ParticleUI/Alpha`. Ribbon, World Space, lighting data, Size Affects Lifetime и случайные/двойные кривые трейла пока отклоняются. Полоса строится в GPU по аналитической траектории, с 2–32 сегментами по Min Vertex Distance и оценке пути. Это приближение нативного размещения точек. SetParticles восстанавливает живой трейл по изменённой траектории, поэтому правка может сдвинуть его историю. Хвосты умерших частиц сохраняются при Emit до истечения lifetime, до 16 000 сохранённых полос на систему. Stop и повторный Play очищают историю. Естественное завершение ждёт хвосты, даже когда particleCount уже равен нулю.
 
 Для **Sub Emitters** доступны Birth и Death, вероятность события, Inherit Color/Size/Rotation. Допускаются до восьми активных непосредственных дочерних систем с нулевыми локальными position/rotation, единичным scale и теми же simulationSpeed/useUnscaledTime, что у корня. Каждая дочерняя система должна быть совместима с GPU, включая одиночный burst; её Trails и модули движения также работают. Частицы рождаются только по событию, в позиции родителя и в точный момент события, в том числе при большом шаге времени. Collision, Trigger, Manual, вложенные сабэмиттеры и наследование Lifetime/Duration пока отклоняются. CPU обрабатывает события, а движение и трейлы рассчитывает шейдер без нативной симуляции ParticleSystem. API частиц и Emit учитывают дочерний systemIndex в порядке иерархии. Общий particleCount суммирует системы, завершение ждёт дочерние частицы. SetParticles пересчитывает будущие Death-события, но не порождает Birth и Death для явно удалённых частиц.
 
-Демо Trails и Sub Emitters работают в GPU-карточке и Auto. **Run GPU Hierarchy Checks** в Play Mode проверяет события, наследование, API дочерних частиц, паузу, Emit, видимые хвосты после смерти и завершение. Отчёт: `Logs/ParticleUI-GPUHierarchy.txt`.
+Демо Trails и Sub Emitters работают в GPU-карточке и Auto.
 
 ### Границы без обрезки по viewport
 
@@ -697,7 +684,7 @@ VFXGraph использует `Demo/Stress/VFXGraph Stress.prefab`, отдель
 
 GC здесь включает весь кадр Unity, работу Editor и других систем. Это отдельный показатель, а не замер zero-alloc методов адаптера. Сравнивайте запуски при одинаковом разрешении, качестве, фокусе окна и настройках профайлера. Для репрезентативных результатов используйте Player build. Создание RT включает синхронную предварительную симуляцию границ и может вызвать задержку при большой нагрузке.
 
-Префаб [`StressParticles.prefab`](Demo/Stress/StressParticles.prefab) использует burst с фиксированным seed и временем жизни 30 секунд. Пересоздание только этой сцены: **Tools → ME.UITK.Particles → Build and Open Stress Test**. Команда **Run Stress Checks** в Play Mode проверяет число живых частиц, выбор Mesh/RT, разбиение больших мешей и очистку в 18 конфигурациях.
+Префаб [`StressParticles.prefab`](Demo/Stress/StressParticles.prefab) использует burst с фиксированным seed и временем жизни 30 секунд. Пересоздание только этой сцены: **Tools → ME.UITK.Particles → Build and Open Stress Test**.
 
 ### Mesh jobs и Burst
 
@@ -733,12 +720,6 @@ UITK владеет временными выходными буферами и 
 - `Play()` использует кэшированный список систем, не являющихся sub-emitters. `Stop()` приостанавливает scheduled-обновления. RT-эффекты не выделяют неиспользуемые bake-меши.
 
 **Аллокации остаются** при создании элемента или экземпляра префаба, присоединении и пересоздании ресурсов, смене префаба, росте буферов/текстур, первом расширении пула событий и обновлении текста демо. Временные списки из пула выделяют память при первом использовании или росте. Предварительная симуляция границ RT остаётся синхронной. Пула экземпляров префабов и камер нет.
-
-### Как повторить замер
-
-В Play Mode выберите **Tools → Checks → ME.UITK.Particles → Run Performance Checks**. Результат записывается в `Logs/ParticleUI-Performance.txt`.
-
-Тест использует recorder `GC.Alloc` на текущем потоке и сначала проверяет, что `new byte[4096]` создаёт одно событие. Он измеряет **число событий выделения памяти**, а не объём в байтах. Mesh измеряется вокруг настоящих callback отрисовки после прогрева. Методы RT и `Play()` проверяются 32 прямыми вызовами после прогрева. Перед каждым замером показа RT предоставляется завершённый кадр, чтобы выполнялся resolve/blit. CPU-замеры не включают GPU, выделение native-памяти, постороннюю работу Editor и остальную часть render pipeline.
 
 Используйте Unity Profiler в development build на целевом устройстве для оценки полного времени кадра, пиков памяти, первого запуска и скриптов на префабах. Сохранение ёмкости буферов расходует больше памяти ради уменьшения аллокаций. Подробнее о замерах: [performance.md](docs/performance.md) (английский).
 
@@ -783,7 +764,7 @@ particles.Play();
 
 `Play()` сбрасывает граф и отправляет его initial event. `Stop()` отключает симуляцию/рендер и очищает отображаемую текстуру. `particleCount` получает данные через асинхронное чтение Unity с задержкой. Естественное завершение ожидает появления частиц и перехода всех систем в спящее состояние. Для пустых эффектов или очень коротких вспышек, пропущенных при чтении счётчика, оно может не наступить. Для предсказуемого времени завершения задавайте временной порог. `bakedVertexCount` в VFXGraph всегда равен нулю. Камеры, композиция UI и опрос завершения всё равно требуют ресурсов CPU/GPU.
 
-Команда **Tools > ME.UITK.Particles > Create VFXGraph Sample** создаёт `Demo/VFXGraph/VFXGraph Burst.prefab` и граф из шаблона Unity Simple Burst. **Run VFXGraph Checks** в Play Mode проверяет видимые пиксели, счётчики, завершение, остановку, отсоединение и повторный запуск в UI-документах сцены. Существующие проверки рендера и завершения продолжают покрывать Mesh и RenderTexture.
+Команда **Tools > ME.UITK.Particles > Create VFXGraph Sample** создаёт `Demo/VFXGraph/VFXGraph Burst.prefab` и граф из шаблона Unity Simple Burst.
 
 ## Управление отдельными частицами
 
@@ -881,7 +862,7 @@ public sealed class MyParticleWindow : EditorWindow {
 }
 ```
 
-**Tools > ME.UITK.Particles > Editor Preview** позволяет выбрать префаб и режим рендера. **Run Editor Checks** проверяет Mesh, RenderTexture, Atlas, GPU, Auto и VFXGraph в настоящем окне редактора. Отчёт: `Logs/ParticleUI-Editor.txt`.
+**Tools > ME.UITK.Particles > Editor Preview** позволяет выбрать префаб и режим рендера.
 
 В Edit Mode оба варианта часов завершения используют реальное время редактора. ParticleSystem и VFX симулируются вручную, камеры рендерят по явному запросу. Auto выбирает по совместимости (GPU, затем Mesh или текстурные пути), без замера FPS из Play Mode. Текстурный предпросмотр требует поддержки `RenderPipeline.StandardRequest`; проверена URP 17.6.0 в Unity 6000.6.0f1 текущего проекта. Игровые UIDocument по-прежнему требуют Play Mode.
 
@@ -1000,10 +981,6 @@ burst и эмиссии префаба. Предварительный Play не
   Position, Tint и Scale. Нативные режимы и GPU также поддерживают ParticleAccess,
   Emit, EmitIn и CoordinateConversion. После SetPrefab и пересоздания проверяйте флаги заново.
 
-**Tools > Checks > ME.UITK.Particles > Run Controls API Checks** проверяет спаун по
-трансформированной кнопке, повторные burst, скорость, состояния и аргументы.
-Color Checks сравнивает итоговый цвет на экране между Mesh, jobs и RenderTexture.
-
 ## Расширенная эмиссия, симуляция и асинхронное проигрывание
 
 Вызывайте API в основном/UI-потоке после подключения к панели и расчёта layout. `button` и `counter` — VisualElement на той же панели, что и `particles`.
@@ -1066,8 +1043,6 @@ Stop, новый Play/PlayAsync, SetPrefab, detach и Dispose отменяют �
 
 Нативные backend и GPU выставляют флаги ParticleCapabilities: `EmitAt`, `EmitAlongBorder`, `Attractor`, `ManualSimulation`, `RandomSeed`. В VFXGraph эти операции выбрасывают NotSupportedException. Все backend выставляют `AsyncPlayback` и `Prewarm`; асинхронное завершение VFXGraph зависит от запаздывающих счётчиков, поэтому предпочтительны пороги времени. Для новых настроек нет UXML/USS-алиасов.
 
-Проверка в Play Mode: **Tools > Checks > ME.UITK.Particles > Run Advanced API Checks**. Отчёт: `Logs/ParticleUI-Advanced.txt`.
-
 ## Параметры burst и перелёты между элементами UI
 
 `Emit(ParticleEmitParams parameters, uint count, int systemIndex = 0)` переопределяет только переданные начальные значения. Все поля nullable: пропущенное поле сохраняет значение, выбранное из настроек префаба. Префаб и уже существующие частицы не меняются.
@@ -1122,7 +1097,7 @@ void OnArrived(ParticleArrivedEvent evt) {
 
 Подписывайтесь до эмиссии и отписывайтесь через UnregisterCallback при очистке. Не сохраняйте pooled-объект события. Несколько перелётов могут дать отдельные события за одно обновление. Обработчик может перезапустить или удалить эффект; оставшиеся уведомления отменённого запуска отбрасываются. Событие прибытия отдельно от ParticleCompletedEvent, которое завершает весь эффект. Пороги завершения могут остановить запуск до прибытия.
 
-Нативные backend и GPU выставляют флаги `EmitParameters`, `EmitTowards`, `ArrivalEvents`. VFXGraph отклоняет эмиссию с параметрами и перелёты через NotSupportedException. UXML/USS-алиасов нет. Проверка в Play Mode: **Tools > Checks > ME.UITK.Particles > Run Transfer API Checks**, отчёт: `Logs/ParticleUI-Transfers.txt`.
+Нативные backend и GPU выставляют флаги `EmitParameters`, `EmitTowards`, `ArrivalEvents`. VFXGraph отклоняет эмиссию с параметрами и перелёты через NotSupportedException. UXML/USS-алиасов нет.
 
 
 ### Постоянная эмиссия и привязка области
@@ -1161,8 +1136,6 @@ if (particles.supportsStateCapture == true) {
 Проверить поддержку можно через `supportsStateCapture` или флаг `StateCapture`. Снимки поддерживаются нативными backend, аналитическим GPU и отдельным пространственным Noise, включая очередь burst-волн. Аналитические снимки включают trails и отложенные sub-emitters. VFXGraph и остальные GPU compute-dynamics (например, Collision или Limit Velocity) выбрасывают `NotSupportedException` при захвате. Это снимок конкретного экземпляра в памяти, с выделением массивов: его нельзя сериализовать или перенести на другой элемент. После пересоздания backend, отсоединения элемента или замены prefab он недействителен; перемещение нативного экземпляра, например при перераспределении атласа, также отклоняет восстановление. Один снимок можно использовать повторно.
 
 Снимок не сохраняет сцену, layout, внешние объекты или изменения модулей prefab. Цели остаются ссылками на существующие VisualElement. Restore отменяет текущий `PlayAsync` и переход представления; подписки на события сохраняются, уже доставленные события не отменяются и могут прийти снова при повторном проигрывании. Для воспроизводимого пошагового сценария используйте ручную симуляцию и неизменные внешние условия.
-
-Проверка в Play Mode: **Tools > Checks > ME.UITK.Particles > Run State and Emission Checks**, отчёт: `Logs/ParticleUI-State.txt`.
 
 
 ### Эмиссия через UXML и USS
@@ -1301,8 +1274,8 @@ inline-значение opacity, в том числе наследование �
 снимок нужно обновить.
 
 В боковой панели демо добавлен блок **Visual Element Reveal** с кнопками **Cloud reveal**
-и **Assemble UI**. Проверка: **Tools > Checks > ME.UITK.Particles > Run Reveal Checks**
-в Play Mode с видимым Game View; отчёт — `Logs/ParticleUI-Reveal.txt`.
+и **Assemble UI**.
+
 ### Режим поверх UI и clipping
 
 `SetRenderOnTop(bool enabled = true)` включает отрисовку в верхнем слое текущей панели. Свойство `renderOnTop` возвращает состояние; по умолчанию режим выключен.

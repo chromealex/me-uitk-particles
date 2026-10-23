@@ -102,8 +102,6 @@ change declarative defaults from C# while retaining USS overrides. The existing 
 configuration approaches on one element: the next USS update restores its declarative configuration.
 
 Runnable assets: [ParticleMarkup.uxml](Demo/ParticleMarkup.uxml), [ParticleMarkup.uss](Demo/ParticleMarkup.uss).
-Run **Tools > Checks > ME.UITK.Particles > Run Markup Checks** to verify import, automatic playback,
-attributes, class changes and disposal. Report: `Logs/ParticleUI-Markup.txt`.
 
 ### USS animations
 
@@ -154,9 +152,6 @@ leave animations disabled.
 
 Call `ApplyUxmlSettings()` after editing `uxml*` properties if you need to Play immediately in
 the same frame. Otherwise prefer the normal deferred application for UXML and USS class changes.
-**Run Markup Checks** also verifies delay, bounds interpolation, reversal and disposal.
-**Run Demo Markup Checks** starts from Edit Mode, validates both scenes in Play Mode and returns
-to Edit Mode. Report: `Logs/ParticleUI-DemoMarkup.txt`.
 
 
 ## What it does
@@ -284,8 +279,6 @@ void OnParticlesCompleted(ParticleCompletedEvent evt) {
 - `stopOnCompletion` defaults to false: notification alone does not interrupt rendering or emission. Set it to true to stop and clear before invoking the callback.
 - Manual `Stop()`, `SetPrefab()`, detach and `Dispose()` cancel the pending notification. Reattaching a playing element starts a fresh playback, matching its existing restart behavior. Subscriptions persist until removed with `UnregisterCallback<ParticleCompletedEvent>()`. The pooled event supports trickle-down and bubbling: `evt.target` is the particle element, while `evt.currentTarget` is the element handling the event. Event instances must not be retained after the callback. First-use event pool growth may allocate.
 
-Run **Tools > Checks > ME.UITK.Particles > Run Completion Checks** in a demo's Play Mode to verify threshold boundaries, Any/All, child systems, restart, cancellation and scheduler delivery.
-
 ## Draw behind or above UI
 
 ![Particles drawn behind a button, then above its background and text](docs/media/layering.gif)
@@ -345,7 +338,7 @@ Numeric enum values changed: old Auto `0` is now `15`, VFXGraph `3` is now `16`,
 
 `RenderTextureAtlas` is an additional native rendering path: up to four compatible effects share one camera, two textures and one alpha-resolve pass. `Auto` keeps GPU priority, compares Mesh/RT for Mesh-compatible effects, and groups eligible RenderTexture candidates (including measured RT winners) when four playing effects have matching tile dimensions/resolution. Existing groups remain shared down to two effects; a lone active effect returns to RT without restarting simulation.
 
-The playground has a separate **SHARED TEXTURE ATLAS** card alongside RT. The stress test offers **RenderTextureAtlas** and quick presets for 4 or 16 elements with 10,000 total particles. Check `activeMode` for the actual path. **Run Atlas Checks** validates final UI pixels, tile isolation/orientation, automatic transitions, stopping, detach/reattach and oversized-tile fallback.
+The playground has a separate **SHARED TEXTURE ATLAS** card alongside RT. The stress test offers **RenderTextureAtlas** and quick presets for 4 or 16 elements with 10,000 total particles. Check `activeMode` for the actual path.
 
 Atlas supports one local, view-aligned ParticleSystem per prefab, with `ParticleUI/Alpha` and particle sorting disabled. World-space trails, gravity, external interactions/shape renderers, additional components and uncertified shaders use RT. Bounds are estimated and checked before rendering; growing effects are regrouped. Tiles above 1024 pixels per axis or 128 world units fall back to RT only when its flag is allowed; otherwise drawing pauses. Atlas pages require 2048-pixel texture support. Stopped elements retain their tiles but do not draw; empty pages are released on disposal.
 
@@ -356,7 +349,7 @@ particles.SetPrefab(effectPrefab, ParticleRenderMode.RenderTextureAtlas);
 particles.Play();
 ```
 
-Auto checks GPU first, compares **Mesh / RenderTexture** for Mesh-compatible effects, and uses **RenderTexture / RenderTextureAtlas** for incompatible effects. Measured RT winners can also join Atlas; Mesh remains preferred when frame times are close. VFX Graph requires explicit `ParticleRenderMode.VFXGraph`. Run **Run Render Mode Checks** and **Run Atlas Checks** to verify selection and grouping.
+Auto checks GPU first, compares **Mesh / RenderTexture** for Mesh-compatible effects, and uses **RenderTexture / RenderTextureAtlas** for incompatible effects. Measured RT winners can also join Atlas; Mesh remains preferred when frame times are close. VFX Graph requires explicit `ParticleRenderMode.VFXGraph`.
 
 There are **five rendering paths: Mesh, RenderTexture (RT), RenderTextureAtlas, GPU, and VFXGraph / VFX Graph**. `Auto` is a selection policy; VFX Graph remains explicit.
 
@@ -399,7 +392,7 @@ Rotation, velocity, force and noise strength accept Constant, Two Constants, Cur
 
 **Sub Emitters:** Birth and Death support emission probability and Inherit Color/Size/Rotation. Up to eight active direct child systems may use zero local position/rotation, unit scale and the root simulation speed/clock. Each child must otherwise meet GPU compatibility, including one burst; its trails and motion modules are supported. Children emit only when triggered, at the parent's event position and exact simulation time, including large time steps. Collision, Trigger, Manual events, nested sub-emitters and Lifetime/Duration inheritance are rejected. CPU event scheduling creates seeds; particle movement and trails stay shader-driven without native ParticleSystem simulation. Particle APIs and Emit accept a child systemIndex in hierarchy order. particleCount sums the hierarchy; completion waits for children. SetParticles reschedules future natural deaths but does not generate Birth or death events for explicitly removed particles.
 
-The existing Trails and Sub Emitters presets work in the GPU card and Auto. **Run GPU Hierarchy Checks** in Play Mode checks events, inheritance, child APIs, pause, Emit, surviving trail pixels and completion. Report: `Logs/ParticleUI-GPUHierarchy.txt`.
+The existing Trails and Sub Emitters presets work in the GPU card and Auto.
 
 
 Additional GPU modules (GPU approximations, not native Shuriken simulation):
@@ -422,13 +415,9 @@ Limit Velocity, Collision, Triggers and External Forces use a compute buffer and
 
 Stateful GPU particle counts use asynchronous readback and can lag a frame or more. `GetParticles`, `SetParticles`, Emit and Custom Data access synchronize GPU state when needed and may stall; ordinary simulation stays on GPU. The analytic path continues to count from lifetimes without readback. Glow selects at most the first maxLights particle slots before ratio filtering, so it may render fewer glows than Unity's light allocation.
 
-Run **Run Extended GPU Checks** in Play Mode for appearance pixels, atlas frames, emitter velocity, Custom Data, GPU speed limits/drag, plane bounce, trigger kills, wind, read/edit continuity and glow without native instances. Report: `Logs/ParticleUI-GPUExtended.txt`.
-
 Unsupported module settings, hierarchies, scripts, extra renderers, other materials or unsupported hardware cause Auto to fall back to Mesh/RenderTexture. Explicit `ParticleRenderMode.GPU` rejects incompatible prefabs before replacing the current effect. `ParticleElement.GpuCompatibility(prefab)` returns null when compatible, otherwise a reason; Editor/DEBUG compatibilityInfo also reports the fallback reason.
 
 Curves and gradients use a 256-sample approximation. Random values preserve the configured ranges, but do not reproduce Unity's RNG sequence. Seeds are generated when the backend is created; Play reuses them. Call SetPrefab again to apply changed prefab settings. This is a limited GPU implementation, not complete Shuriken parity. bakedVertexCount is zero; particleCount uses lifetimes for analytic motion and delayed GPU readback for stateful dynamics. Natural completion and Stop use the standard element API.
-
-Run **Tools → Checks → ME.UITK.Particles → Run GPU Checks** in Play Mode to check Auto selection, no ParticleSystem instantiation, visible pixels, completion, replay, Stop, detach/attach and fallback. Report: `Logs/ParticleUI-GPU.txt`. **Run GPU Module Checks** additionally validates motion integrals, ranges, rebasing, Noise and diagnostics; report: `Logs/ParticleUI-GPUModules.txt`.
 
 ### Bounds without viewport cropping
 
@@ -632,8 +621,6 @@ particles.Play();
 
 For all `ParticleCompletionSettings` fields, `ParticleCompletionMatch.Any` / `All`, `ParticleCompletionClock.Unscaled` / `Scaled`, and event subscription/unsubscription, see the complete [playback completion example](#playback-completion).
 
-**Run Texture Sheet Checks** validates all four frame colors in Grid/Sprites mode through final UI pixels in Mesh (with and without Jobs), GPU and RenderTexture. Report: `Logs/ParticleUI-TextureSheet.txt`. The existing `TextureSheetAnimationEnabled` compatibility value now identifies an invalid sprite list, not every enabled sheet.
-
 ### Check compatibility before creating an element
 
 ```csharp
@@ -690,7 +677,7 @@ Open [`ParticleStressTest.unity`](Demo/ParticleStressTest.unity) and enter Play 
 
 GC here includes the entire Unity frame, Editor overhead, and other systems. It is separate from the scoped zero-allocation adapter benchmark. Compare runs at the same resolution, quality settings, focus and profiler settings; use a Player build for representative results. RT creation includes synchronous bounds pre-simulation and can stall with large workloads.
 
-The dedicated [`StressParticles.prefab`](Demo/Stress/StressParticles.prefab) uses a seeded burst and a 30-second lifetime. Rebuild only this scene with **Tools > ME.UITK.Particles > Build and Open Stress Test**. Run **Run Stress Checks** in Play Mode to verify live particle counts, Mesh/RT selection, large-mesh chunking, and clearing across 18 configurations.
+The dedicated [`StressParticles.prefab`](Demo/Stress/StressParticles.prefab) uses a seeded burst and a 30-second lifetime. Rebuild only this scene with **Tools > ME.UITK.Particles > Build and Open Stress Test**.
 
 ### Mesh jobs
 
@@ -728,12 +715,6 @@ UITK owns the temporary output buffers and waits for the registered jobs before 
 - Demo counters update at most 10 times per second and only create new text when values change.
 
 **Allocations still occur** when creating an element or prefab instance, attaching/recreating resources, replacing a prefab, growing buffers/textures, first-use event pool growth, or updating demo labels. Pooled scratch lists allocate on their first use or growth. The bounds pre-simulation still runs synchronously when an RT instance is created. There is no pool of prefab instances or cameras.
-
-### Reproduce the measurement
-
-In Play Mode, use **Tools → Checks → ME.UITK.Particles → Run Performance Checks**. Results are written to `Logs/ParticleUI-Performance.txt`.
-
-The benchmark uses Unity's `GC.Alloc` recorder on the current thread, first verifying that a known `new byte[4096]` produces one event. It reports **allocation event counts**, not allocated bytes. Mesh measurements wrap actual UI drawing callbacks after warm-up; RT methods and `Play()` are measured with 32 warmed direct calls. RT presentation is supplied with a completed frame on each call so it exercises the resolve/blit path. CPU timings exclude GPU execution, native memory allocation, unrelated Editor work, and the rest of the rendering pipeline.
 
 Use Unity Profiler in a development build on your target device to assess total frame cost, peak memory, first-use spikes, and your own prefab scripts. Retaining buffer capacity trades memory for fewer allocations. See [performance.md](docs/performance.md) for measurement details.
 
@@ -778,7 +759,7 @@ particles.Play();
 
 `Play()` resets the graph and sends its configured initial event; `Stop()` disables simulation/rendering and clears the presented texture. `particleCount` uses Unity's delayed GPU readback. Natural completion waits until particles have been observed and all systems report asleep; empty effects or very short bursts missed by readback may never meet that condition. Use a time threshold for deterministic completion timing. `bakedVertexCount` is always zero in VFXGraph mode. This is not a zero-CPU-overhead renderer: cameras, UI composition and event polling still cost CPU/GPU time.
 
-Use **Tools > ME.UITK.Particles > Create VFXGraph Sample** to create `Demo/VFXGraph/VFXGraph Burst.prefab` and its graph from Unity's Simple Burst template. **Run VFXGraph Checks** in Play Mode verifies visible pixels, counts, completion, stopping, detaching and replay in the scene's UI documents. Existing rendering and completion checks continue to cover Mesh and RenderTexture.
+Use **Tools > ME.UITK.Particles > Create VFXGraph Sample** to create `Demo/VFXGraph/VFXGraph Burst.prefab` and its graph from Unity's Simple Burst template.
 
 ## Per-particle control
 
@@ -874,7 +855,7 @@ public sealed class MyParticleWindow : EditorWindow {
 }
 ```
 
-Use **Tools > ME.UITK.Particles > Editor Preview** to select a prefab and rendering mode. **Run Editor Checks** checks Mesh, RenderTexture, Atlas, GPU, Auto and VFXGraph in an actual editor window and writes `Logs/ParticleUI-Editor.txt`.
+Use **Tools > ME.UITK.Particles > Editor Preview** to select a prefab and rendering mode.
 
 Edit Mode uses real editor time for both completion clocks, manual ParticleSystem/VFX simulation, and explicit camera render requests. Auto uses compatibility selection (GPU, otherwise Mesh or texture paths), without the Play Mode FPS benchmark. Texture previews require a pipeline supporting `RenderPipeline.StandardRequest`; verified with this project's URP 17.6.0 on Unity 6000.6.0f1. Runtime UIDocuments still require Play Mode.
 
@@ -987,10 +968,6 @@ State and feature queries:
   Position, Tint and Scale. Native and GPU also support ParticleAccess, Emit, EmitIn
   and CoordinateConversion. Query again after SetPrefab or backend recreation.
 
-Run **Tools > Checks > ME.UITK.Particles > Run Controls API Checks** for transformed-button
-emission, repeated bursts, speed changes, state and argument checks. Run Color Checks
-for final screen tint comparison between Mesh, jobs and RenderTexture.
-
 ## Advanced emission, simulation and async playback
 
 These APIs operate on the main/UI thread after attachment and layout. `button` and `counter` are VisualElements on the same panel as `particles`.
@@ -1053,8 +1030,6 @@ Stop, another Play/PlayAsync, SetPrefab, detach and Dispose cancel the pending t
 
 Native and GPU advertise `EmitAt`, `EmitAlongBorder`, `Attractor`, `ManualSimulation`, and `RandomSeed` in ParticleCapabilities. These operations throw NotSupportedException for VFXGraph. All backends advertise `AsyncPlayback` and `Prewarm`; VFXGraph async completion is subject to its delayed particle counters, so time thresholds are recommended. The new settings have no UXML/USS aliases.
 
-Run **Tools > Checks > ME.UITK.Particles > Run Advanced API Checks** in Play Mode. The report is `Logs/ParticleUI-Advanced.txt`.
-
 ## Burst parameters and UI transfers
 
 `Emit(ParticleEmitParams parameters, uint count, int systemIndex = 0)` overrides only the supplied start values. Every field is nullable: an omitted field keeps the prefab's sampled value. It does not modify the prefab or existing particles.
@@ -1109,7 +1084,7 @@ The transfer clock uses scaled game time during automatic updates (editor time i
 
 Subscribe before emission. Use UnregisterCallback during cleanup; do not retain pooled event objects. Multiple transfers can produce separate events in one update. Callbacks may restart or dispose the effect; remaining notifications from the cancelled run are discarded. Arrival is distinct from ParticleCompletedEvent, which reports completion of the whole effect. Completion thresholds can stop a run before a transfer arrives.
 
-Native backends and GPU expose `EmitParameters`, `EmitTowards`, `ArrivalEvents` capability flags. VFXGraph rejects parameterized emission and transfers with NotSupportedException. These APIs have no UXML/USS aliases. Run **Tools > Checks > ME.UITK.Particles > Run Transfer API Checks** in Play Mode; report: `Logs/ParticleUI-Transfers.txt`.
+Native backends and GPU expose `EmitParameters`, `EmitTowards`, `ArrivalEvents` capability flags. VFXGraph rejects parameterized emission and transfers with NotSupportedException. These APIs have no UXML/USS aliases.
 
 
 ### Continuous emission and area binding
@@ -1148,8 +1123,6 @@ if (particles.supportsStateCapture == true) {
 Check `supportsStateCapture` or the `StateCapture` capability first. Native backends, analytical GPU and standalone spatial Noise support snapshots, including pending burst waves. Analytic snapshots include trails and pending sub-emitters. VFXGraph and other GPU compute-dynamics (such as Collision or Limit Velocity) throw `NotSupportedException` on capture. This is an allocating, in-memory snapshot of one instance; it cannot be serialized or transferred to another element. Recreating the backend, detaching the element or replacing its prefab invalidates it. Moving the native instance, for example during atlas redistribution, also rejects restoration. A checkpoint can be restored repeatedly.
 
 Snapshots do not capture the scene, layout, external objects or prefab module edits. Targets remain references to existing VisualElements. Restore cancels the current `PlayAsync` and presentation transition; event subscriptions remain, previously delivered events are not undone and may fire again during replay. Use manual simulation with unchanged external conditions for reproducible stepping.
-
-In Play Mode, run **Tools > Checks > ME.UITK.Particles > Run State and Emission Checks**; report: `Logs/ParticleUI-State.txt`.
 
 
 ### Emission through UXML and USS
@@ -1285,8 +1258,8 @@ reveal = ParticleReveal.Assemble(target, snapshot, duration: 1.2f, columns: 32u)
   on owner teardown, and keep Game View rendering in the Editor.
 
 The playground sidebar includes **Visual Element Reveal**, with **Cloud reveal** and
-**Assemble UI** buttons. Host validation: **Tools > Checks > ME.UITK.Particles > Run Reveal
-Checks**, in Play Mode with Game View visible; report: `Logs/ParticleUI-Reveal.txt`.
+**Assemble UI** buttons.
+
 ### Rendering above UI and clipping
 
 `SetRenderOnTop(bool enabled = true)` enables the top rendering layer on the current panel. The read-only `renderOnTop` property reports its state; disabled by default.
