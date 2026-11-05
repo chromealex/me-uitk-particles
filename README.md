@@ -696,6 +696,7 @@ UITK owns the temporary output buffers and waits for the registered jobs before 
 ## Limitations
 
 - Validated with **Unity 6000.6.0f1 / URP 17.6.0**. The tested material is the included alpha-blended `ParticleUI/Alpha` shader. Additive, distortion, soft-particle, and lit shaders may differ from their original scene rendering. A single transparent layer cannot reproduce arbitrary blending with UI behind it.
+- Built-in Render Pipeline: `ParticleUI/Alpha` has a Built-in SubShader, so Mesh, RenderTexture and RenderTextureAtlas work; the GPU mode needs URP (`ProceduralParticles` is unsupported without it, and Auto falls back). Checked in Unity 6000.6.5f1.
 - RT cameras look along the Z axis at the XY plane. The prefab root rotation is reset; design your effect for that view.
 - Each element owns a prefab instance and a camera; RT elements also allocate textures. There is no pooling. Pre-simulation is synchronous and may cause a spike for expensive prefabs. Profile your intended effect count and target devices.
 - RT presentation has roughly one frame of latency. Large effects may lose sharpness at the texture resolution cap.

@@ -27,6 +27,8 @@ The verified configuration is Unity **6000.6.0f1**. In the host Unity project, c
 for dependencies; these files are not part of the library repository. The configuration
 uses URP **17.6.0**, Visual Effect Graph **17.6.0**, Burst **2.0.0**, Input System
 **1.20.0**, and uGUI **2.6.0**. Do not treat other versions or render pipelines as verified.
+`ParticleUI/Alpha` also has a Built-in RP SubShader (Mesh, RenderTexture and Atlas work there);
+the URP SubShaders use `PackageRequirements`, and the GPU mode is unavailable without URP.
 
 - This is an asset folder, not a UPM package. When moving it, preserve the entire
   `Runtime` folder, including shaders, `Resources`, asmdef, and `.meta` files.

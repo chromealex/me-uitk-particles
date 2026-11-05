@@ -32,6 +32,7 @@ Shader "Hidden/ParticleUI/ProceduralParticles" {
         [HideInInspector] _ApplyColorSpace ("Apply color space", Float) = 0
     }
     SubShader {
+        PackageRequirements { "com.unity.render-pipelines.universal" }
         Tags { "Queue"="Transparent" "RenderType"="Transparent" "RenderPipeline"="UniversalPipeline" }
         Pass {
             Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
