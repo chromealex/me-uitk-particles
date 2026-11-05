@@ -381,6 +381,17 @@ namespace ME.UITK.Particles {
 
         }
 
+        public static int effectLayer {
+            get => ParticleInstance.effectLayer;
+            set {
+                if (value < 0 || value > 31) {
+                    throw new System.ArgumentOutOfRangeException(nameof(value), value, "Effect layer must be in the range 0..31.");
+                }
+
+                ParticleInstance.effectLayer = value;
+            }
+        }
+
         public static MeshCompatibilityResult MeshCompatibility(GameObject source) {
 
             return MeshParticleCompatibility.MeshCompatibility(source);

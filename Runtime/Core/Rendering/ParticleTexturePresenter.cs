@@ -70,7 +70,7 @@ namespace ME.UITK.Particles {
             this.effectCamera.orthographic = true;
             this.effectCamera.clearFlags = CameraClearFlags.SolidColor;
             this.effectCamera.backgroundColor = Color.clear;
-            this.effectCamera.cullingMask = 1 << ParticleInstance.EFFECT_LAYER;
+            this.effectCamera.cullingMask = 1 << ParticleInstance.effectLayer;
             var shader = Shader.Find("Hidden/ParticleUI/Unpremultiply");
             if (shader != null) {
                 this.resolveMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave, };

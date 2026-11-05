@@ -33,7 +33,8 @@ uses URP **17.6.0**, Visual Effect Graph **17.6.0**, Burst **2.0.0**, Input Syst
   The runtime uses Burst and Collections.
 - Add a reference to `ME.UITK.Particles` in the consuming code's asmdef.
 - Set up a `UIDocument` with Panel Settings. The demos require Input System to be enabled.
-- Reserve layer **31** for the adapter and exclude it from scene cameras.
+- Reserve layer **31** for the adapter and exclude it from scene cameras. If it is taken, set
+  `ParticleElement.effectLayer` to another free layer before creating effects.
 - A backend requires an attached panel and an assigned prefab. Runtime panels require
   Play Mode; editor panels support Edit Mode through Editor/ParticleEditorLifecycle.cs.
   Use Tools > Checks > ME.UITK.Particles > Run Editor Checks to validate Edit Mode rendering.
@@ -245,7 +246,7 @@ clipping: `Overflow.Visible` on ParticleElement does not override a mask higher 
 - RT is limited to 1024 pixels per side, so large effects may look blurry.
   Presimulation is synchronous and limited to 15 seconds / 450 steps;
   heavy prefabs may cause creation spikes. RT presentation has roughly one frame of latency.
-- Native instances are placed far from the scene on layer 31. Prefab scripts run;
+- Native instances are placed far from the scene on layer 31 (`ParticleElement.effectLayer`). Prefab scripts run;
   collision, triggers, and external forces do not automatically inherit the original
   scene environment. The camera looks along Z at the XY plane, and prefab root rotation
   is reset.

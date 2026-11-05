@@ -42,7 +42,7 @@ namespace ME.UITK.Particles {
             this.camera.farClipPlane = 256;
             this.camera.clearFlags = CameraClearFlags.SolidColor;
             this.camera.backgroundColor = Color.clear;
-            this.camera.cullingMask = 1 << ParticleInstance.EFFECT_LAYER;
+            this.camera.cullingMask = 1 << ParticleInstance.effectLayer;
             cameraObject.transform.position = this.origin + Vector3.back * 128;
             this.rawTexture = new RenderTexture(tilePixels.x * 2, tilePixels.y * 2, 24, RenderTextureFormat.ARGBHalf) {
                 name = "Particle atlas raw", hideFlags = HideFlags.HideAndDontSave, wrapMode = TextureWrapMode.Clamp,

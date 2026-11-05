@@ -3,6 +3,7 @@
 // </summary>
 // Author: Alex Silaev (https://chromealex.com)
 
+#if ME_UITK_PARTICLES_INPUT_SYSTEM
 using System.IO;
 using System.Linq;
 using ME.UITK.Particles.Demo;
@@ -85,7 +86,7 @@ namespace ME.UITK.Particles.Editor {
             camera.tag = "MainCamera";
             camera.transform.position = new Vector3(0, 0, -12);
             camera.orthographic = true;
-            camera.cullingMask = ~(1 << 31);
+            camera.cullingMask = ~(1 << ParticleElement.effectLayer);
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = new Color(.025f, .035f, .06f);
             var events = new GameObject("UI Event System", typeof(EventSystem), typeof(InputSystemUIInputModule));
@@ -121,3 +122,4 @@ namespace ME.UITK.Particles.Editor {
     }
 
 }
+#endif

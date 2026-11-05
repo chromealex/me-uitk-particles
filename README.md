@@ -179,10 +179,10 @@ This repository contains the asset folder, including runtime code, editor tools,
 
 ### Use it in your own project
 
-The code is split into `ME.UITK.Particles` (runtime), `ME.UITK.Particles.Demo`, and `ME.UITK.Particles.Editor` (Editor only). If your scripts use an asmdef, add a reference to `ME.UITK.Particles`. The runtime assembly references Burst and Collections; it does not depend on the demo or editor assemblies.
+The code is split into `ME.UITK.Particles` (runtime), `ME.UITK.Particles.Demo`, and `ME.UITK.Particles.Editor` (Editor only). If your scripts use an asmdef, add a reference to `ME.UITK.Particles`. The runtime assembly references Burst and Collections; it does not depend on the demo or editor assemblies. The demo scene builders in the editor assembly compile only when URP and Input System are installed; the rest of the editor tools work without them.
 
 Copy [`Runtime`](Runtime), including its shaders, `Resources` directory, and `.meta` files, into a compatible Unity project. Burst is required to compile the job.
-Use a configured `UIDocument` and reserve **layer 31** for the adapter. Exclude that layer from your scene cameras; the adapter's own cameras render it.
+Use a configured `UIDocument` and reserve **layer 31** for the adapter. Exclude that layer from your scene cameras; the adapter's own cameras render it. If layer 31 is taken, assign another free layer through `ParticleElement.effectLayer` before creating effects.
 
 ```csharp
 using ME.UITK.Particles;
@@ -699,7 +699,7 @@ UITK owns the temporary output buffers and waits for the registered jobs before 
 - RT cameras look along the Z axis at the XY plane. The prefab root rotation is reset; design your effect for that view.
 - Each element owns a prefab instance and a camera; RT elements also allocate textures. There is no pooling. Pre-simulation is synchronous and may cause a spike for expensive prefabs. Profile your intended effect count and target devices.
 - RT presentation has roughly one frame of latency. Large effects may lose sharpness at the texture resolution cap.
-- Instances live far from the scene on layer 31, spaced 100 world units apart. Extremely large effects can overlap neighboring capture areas. Keep that layer exclusive to this adapter.
+- Instances live far from the scene on layer 31 (`ParticleElement.effectLayer`), spaced 100 world units apart. Extremely large effects can overlap neighboring capture areas. Keep that layer exclusive to this adapter.
 - Scripts on particle prefabs also run. Prefer visual-only prefabs. Collision, triggers, and external forces do not automatically inherit the original scene's environment.
 - The adapter preserves the prefab's time settings, forces `AlwaysSimulate`, and disables particle stop actions so the instance remains under its control. Demo prefabs use unscaled time and fixed seeds.
 

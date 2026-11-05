@@ -6,7 +6,7 @@ namespace ME.UITK.Particles {
 
     internal sealed class ParticleInstance : System.IDisposable {
 
-        internal const int EFFECT_LAYER = 31;
+        internal static int effectLayer = 31;
         private static readonly HashSet<int> slots = new();
         private int slot = -1;
         public GameObject gameObject { get; private set; }
@@ -27,7 +27,7 @@ namespace ME.UITK.Particles {
             using var transformsLease = UnityEngine.Pool.ListPool<Transform>.Get(out var transforms);
             this.gameObject.GetComponentsInChildren(true, transforms);
             foreach (var transform in transforms) {
-                transform.gameObject.layer = ParticleInstance.EFFECT_LAYER;
+                transform.gameObject.layer = ParticleInstance.effectLayer;
                 if (Application.isPlaying == false) {
                     transform.gameObject.hideFlags = HideFlags.HideAndDontSave;
                 }
@@ -45,7 +45,7 @@ namespace ME.UITK.Particles {
             ParticleInstance.slots.Add(this.slot);
             this.gameObject = new GameObject($"[Particle UI] {name}") {
                 hideFlags = HideFlags.DontSave,
-                layer = ParticleInstance.EFFECT_LAYER,
+                layer = ParticleInstance.effectLayer,
             };
             this.gameObject.transform.position = new Vector3(10000 + this.slot * 100, 10000, 0);
 

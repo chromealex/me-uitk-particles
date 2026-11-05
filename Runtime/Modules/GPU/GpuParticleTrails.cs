@@ -106,7 +106,7 @@ namespace ME.UITK.Particles {
             this.lookup.Apply(false, true);
             this.material.SetTexture("_TrailCurves", this.lookup);
             this.mesh = new Mesh { name = "Analytic particle trails", hideFlags = HideFlags.HideAndDontSave, indexFormat = IndexFormat.UInt32, };
-            this.gameObject = new GameObject("Analytic trails") { hideFlags = HideFlags.HideAndDontSave, layer = ParticleInstance.EFFECT_LAYER, };
+            this.gameObject = new GameObject("Analytic trails") { hideFlags = HideFlags.HideAndDontSave, layer = ParticleInstance.effectLayer, };
             this.gameObject.transform.SetParent(parent.transform, false);
             this.gameObject.AddComponent<MeshFilter>().sharedMesh = this.mesh;
             this.renderer = this.gameObject.AddComponent<MeshRenderer>();
